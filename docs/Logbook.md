@@ -2,6 +2,7 @@
 ### Questions
 Recommended text editor for Python?
 Which ANOVAs are appropriate?
+Is it not more appropriate to perform the PCAs for brain and liver data separately, rather than for the full data set at once?
 
 ### 16/1 2020
 * Read *A Quick Guide to Organizing Computational Biology Projects* (William Stafford Noble, 2009)
@@ -55,5 +56,9 @@ Which ANOVAs are appropriate?
 * Updated timeplan in project plan
 * Updated "Background" for project plan in accordance with Luka's comments
 * Continued writing code for creating a csv file with all TFs and their associated genes listed
+
+### 29/1 2020
+* Finished code for creating a csv file with all TFs and their associated genes listed, though it required some manual editing of dowloaded csv with urls for fetching csvs for target genes for all TFs
+* Started writing code for creating a dataframe with expression values that has genes as row index, and organ and time point as column index
 
 
