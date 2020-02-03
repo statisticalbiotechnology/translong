@@ -2,7 +2,8 @@
 ### Questions
 Recommended text editor for Python?
 Which ANOVAs are appropriate?
-Is it not more appropriate to perform the PCAs for brain and liver data separately, rather than for the full data set at once?
+Is it appropriate to perform the PCA for the full dataset at once, or only brain and liver data separately?
+How should I handle the replicates for the same time point? Keep them separate or combine in some way?
 
 ### 16/1 2020
 * Read *A Quick Guide to Organizing Computational Biology Projects* (William Stafford Noble, 2009)
@@ -61,4 +62,18 @@ Is it not more appropriate to perform the PCAs for brain and liver data separate
 * Finished code for creating a csv file with all TFs and their associated genes listed, though it required some manual editing of dowloaded csv with urls for fetching csvs for target genes for all TFs
 * Started writing code for creating a dataframe with expression values that has genes as row index, and organ and time point as column index
 
+### 30/1 2020
+* Attempted to write on code for finding gene symbols for each gene ensembl ID and inserting it into dataframe with expression values
+
+### 31/1 2020
+* Made functional code for replacing ensembl gene IDs with gene symbols
+* Performed PCA for a single TF
+
+### 3/2 2019
+* Struggled with collecting gene targets for all TFs in one file, discovered some issues.
+* Created a separate file for perfroming a test PCA on a single TF and attemped to gather its results in a dataframe where results from all TFs could be collected
+
+* Looked into alternative methods for finding gene symbols for each gene ensembl ID and inserting it into dataframe with expression values
+* Finished writing code for finding gene symbols for each gene ensembl ID and inserting it into dataframe with expression values
+* Attempted to solve the issue that the gene list for each TF is read as a string and not a listS
 
