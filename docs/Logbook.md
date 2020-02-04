@@ -69,11 +69,15 @@ How should I handle the replicates for the same time point? Keep them separate o
 * Made functional code for replacing ensembl gene IDs with gene symbols
 * Performed PCA for a single TF
 
-### 3/2 2019
+### 3/2 2020
 * Struggled with collecting gene targets for all TFs in one file, discovered some issues.
 * Created a separate file for perfroming a test PCA on a single TF and attemped to gather its results in a dataframe where results from all TFs could be collected
-
 * Looked into alternative methods for finding gene symbols for each gene ensembl ID and inserting it into dataframe with expression values
 * Finished writing code for finding gene symbols for each gene ensembl ID and inserting it into dataframe with expression values
-* Attempted to solve the issue that the gene list for each TF is read as a string and not a listS
+* Attempted to solve the issue that the gene list for each TF is read as a string and not a list
 
+### 4/2 2020
+* Handed in the first project plan
+* Created separate file for performing ANOVA on results from analysis of a single TF
+* Attempted to perform ANOVA (must look further into how it should be performed)
+* Looked into ratio of variance explained by the first principal component for the single TF

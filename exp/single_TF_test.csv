@@ -1,25 +1,25 @@
 organ,dev_stage,Acaa2
-brain,embryonic day 15.5,
-brain,embryonic day 15.5,
-brain,embryonic day 18.5,
-brain,embryonic day 18.5,
-brain,postnatal day 0.5,
-brain,postnatal day 0.5,
-brain,postnatal day 22,
-brain,postnatal day 22,
-brain,postnatal day 29,
-brain,postnatal day 29,
-brain,postnatal day 4,
-brain,postnatal day 4,
-liver,embryonic day 15.5,
-liver,embryonic day 15.5,
-liver,embryonic day 18.5,
-liver,embryonic day 18.5,
-liver,postnatal day 0.5,
-liver,postnatal day 0.5,
-liver,postnatal day 22,
-liver,postnatal day 22,
-liver,postnatal day 29,
-liver,postnatal day 29,
-liver,postnatal day 4,
-liver,postnatal day 4,
+liver,-5.5,25.448701871220443
+liver,-5.5,-19.65437888731084
+brain,-5.5,-5.629220584427977
+brain,-5.5,-26.383718420580177
+liver,-2.5,17.343543970908353
+liver,-2.5,7.976795170466063
+brain,-2.5,-18.505471299695728
+brain,-2.5,7.070577743784377
+liver,0.5,3.5168637618900944
+liver,0.5,-19.682575351685482
+brain,0.5,-13.63664320580021
+brain,0.5,-5.345545089791171
+liver,4.0,46.25855339143856
+liver,4.0,-2.457240052086758
+brain,4.0,4.088136620285682
+brain,4.0,-13.266393656435149
+liver,22.0,-8.1011592662591
+liver,22.0,-12.191107570921325
+brain,22.0,2.3458061226113642
+brain,22.0,19.251183852201695
+liver,29.0,-16.74649689737027
+liver,29.0,-21.711500140289733
+brain,29.0,53.85995172011619
+brain,29.0,-3.8486638022688995
