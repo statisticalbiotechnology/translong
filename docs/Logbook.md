@@ -81,3 +81,11 @@ How should I handle the replicates for the same time point? Keep them separate o
 * Created separate file for performing ANOVA on results from analysis of a single TF
 * Attempted to perform ANOVA (must look further into how it should be performed)
 * Looked into ratio of variance explained by the first principal component for the single TF
+
+### 5/2 2020
+* Discussed with Lukas about doing the PCA for the full dataset or separately for organs. Separately makes sense, but must do on full dataset to be able to compare. Do separately to look for genes with large impact
+* Discussed with Lukas about potentially using their "porch" package to perform the PCA
+* Finished code for performing ANOVA
+* Created a file for getting q-values (will need to perform PCA on multiple TFs)
+* Created a file for plotting results of PCA of one TF and ran the program
+* Added so that the a dataframe with the ratio of variance explained is created when PCA is performed
