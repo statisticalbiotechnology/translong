@@ -89,3 +89,12 @@ How should I handle the replicates for the same time point? Keep them separate o
 * Created a file for getting q-values (will need to perform PCA on multiple TFs)
 * Created a file for plotting results of PCA of one TF and ran the program
 * Added so that the a dataframe with the ratio of variance explained is created when PCA is performed
+
+### 6/2 2020
+* Finished code for performing PCA on all TFs, calculating p-values and calculating q-values for variance between organs, developmental stage and their combination
+* Ran an experiment for all TFs
+
+### 7/2 2020
+* Looked further into understanding the code for q-value calculation
+* Looked into using LaTeX, with the KTH template (struggled a lot)
+
