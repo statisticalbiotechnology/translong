@@ -1,9 +1,26 @@
 ## Logbook
 ### Questions
-Recommended text editor for Python?
-Which ANOVAs are appropriate?
-Is it appropriate to perform the PCA for the full dataset at once, or only brain and liver data separately?
-How should I handle the replicates for the same time point? Keep them separate or combine in some way?
+Recommended IDE (integrated development environment) for Python?
+~~Should data preparation for log2 transformation be done by removing rows with 0 activity or should a constant (1) be added to each value?~~
+Regarding significance: is q-value not an option with the p-value distribution this data has?
+Regarding significance: what alternative method do you suggest should be used? Bonferroni correction?
+Regarding significance: should significant results be reported, or just aquired p-values? Worry of ad hoc since the full experiment has been run (without log2 transformation) prior to setting a threshold.
+
+How would using porch instead of what I've already done affect the results? How does it operate differently?
+
+### Ideas/plans/thoughts
+Perform PCA on organs individually
+Try to perform the analysis with porch
+Try performing the analysis with weighted PCA
+~~Save figures of activity of TFs found to be most significantly differentially expressed over time and across organs~~
+Look further into the TFs found to be most significantly differentially expressed over time and across organs, their relevance, function etc.
+Look into which genes explain most of the variation for interesting TFs, how much of the first principal component they make up
+Test including a second principal component.
+Look into issues with the method, how principal components depend on linear relationships
+
+Consider the effect of TF regulation being both activating and repressing for when doing the PCA. Is this part of the power of PCA, that it is taken into consideration?
+
+~~Compare results for TF activity aqcuired with PCA and the measured level of mRNA for the gene~~
 
 ### 16/1 2020
 * Read *A Quick Guide to Organizing Computational Biology Projects* (William Stafford Noble, 2009)
@@ -97,4 +114,33 @@ How should I handle the replicates for the same time point? Keep them separate o
 ### 7/2 2020
 * Looked further into understanding the code for q-value calculation
 * Looked into using LaTeX, with the KTH template (struggled a lot)
+
+### 10/2 2020
+* Created a LaTeX document on Overleaf from a KTH template, moved over background text from the project plan to thesis introduction, and added sources and acronyms to function with LaTeX.
+* Log transformed (log2) the data and performed another experiment, showing more promising results
+
+### 11/2 2020
+* Optimized function for replacing ensembl IDs with gene symbols
+* Made an alternative function for replacing ensembl IDs with gene symbols using MyGene
+* Updated code for plotting results
+* Considered if preparation of data for log2 transformation should be done by adding constant (1) or removing rows with zero values. Removing rows loses a lot of data. ASK!
+* Worked on an outline for the thesis in Overleaf.
+
+### 12/2 2020
+* Talked to Lukas and Gustavo about log2 transformation. Lukas suggested weighted PCA. Gustavo suggested adding constant or sklearn transformation.
+* Read into weighted PCA, what it is and what it is for
+* Looked into porch to see how it can be applied
+* Remodeled parts of code to make more of it into functions
+
+### 13/2 2020
+* Looked into extracting the percentage each gene contributes to the first pricipal component of each TF
+* Plotted the expression level of TFs found to have significant differences over organ and developmental stage (Hnf1a, Rtf1) to compare to the expression of their PCs.
+* Looked further into th relavance of Hnf1a. Which genes it has been reported to affect and how it compares to ChIP-atlas data.
+
+### 14/2 2020
+* Added so that created figures are saved in the /exp folder in the specific subfolder for the day
+* Refined the histogram of the p-value distribution to include all three groups (organ, dev_stage, organ:dev stage)
+* Wrote some thoughts into the Thesis as outline for discussion
+* Wrote experimental code that shows histogram of the distribution of how much genes defining a TF contribute to the first principal component for the TF. Applied it to the two TFs found most interesting
+* Improved annotation of code
 
