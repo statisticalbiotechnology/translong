@@ -1,26 +1,43 @@
 ## Logbook
 ### Questions
 Recommended IDE (integrated development environment) for Python?
+
 ~~Should data preparation for log2 transformation be done by removing rows with 0 activity or should a constant (1) be added to each value?~~
+
 Regarding significance: is q-value not an option with the p-value distribution this data has?
+
 Regarding significance: what alternative method do you suggest should be used? Bonferroni correction?
+
 Regarding significance: should significant results be reported, or just aquired p-values? Worry of ad hoc since the full experiment has been run (without log2 transformation) prior to setting a threshold.
 
 How would using porch instead of what I've already done affect the results? How does it operate differently?
 
 ### Ideas/plans/thoughts
 Perform PCA on organs individually
+
 Try to perform the analysis with porch
+
 Try performing the analysis with weighted PCA
+
 ~~Save figures of activity of TFs found to be most significantly differentially expressed over time and across organs~~
+
 Look further into the TFs found to be most significantly differentially expressed over time and across organs, their relevance, function etc.
+
 Look into which genes explain most of the variation for interesting TFs, how much of the first principal component they make up
+
 Test including a second principal component.
+
 Look into issues with the method, how principal components depend on linear relationships
 
 Consider the effect of TF regulation being both activating and repressing for when doing the PCA. Is this part of the power of PCA, that it is taken into consideration?
 
 ~~Compare results for TF activity aqcuired with PCA and the measured level of mRNA for the gene~~
+
+Try to reduce the size of the TF target gene sets
+
+Use MACS2 and STRING binidng score for limiting TF target gene sets
+
+
 
 ### 16/1 2020
 * Read *A Quick Guide to Organizing Computational Biology Projects* (William Stafford Noble, 2009)
@@ -144,3 +161,10 @@ Consider the effect of TF regulation being both activating and repressing for wh
 * Wrote experimental code that shows histogram of the distribution of how much genes defining a TF contribute to the first principal component for the TF. Applied it to the two TFs found most interesting
 * Improved annotation of code
 
+### 17/2 2020
+* Ran PCA with genes potentially regulated by TF was defined as genes +-1kbp from TF binding site
+
+### 18/2 2020
+* Worked on transferreing desirable features of Overleaf thesis template to the KTH template
+* Transferred what had previously been written in Overleaf template to KTH template
+* Worked on code for creating stricter TF target gene sets (by setting a MACS2 score threshold, that is based on q-value from ChIP-seq peak calling)
