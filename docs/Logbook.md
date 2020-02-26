@@ -35,7 +35,19 @@ Consider the effect of TF regulation being both activating and repressing for wh
 
 Try to reduce the size of the TF target gene sets
 
-Use MACS2 and STRING binidng score for limiting TF target gene sets
+~~Use MACS2 and STRING binidng score for limiting TF target gene sets~~
+
+Remove TFs with more than eg 500 genes
+
+~~Plot number of genes in TF gene set against variance expained by the first principal component~~
+
+Make sunburst plots?
+
+In case much time is available: make a figure where each gene's activity for a TF is shown as colour coded squares for each sample, and compare to the overall actvity change for TF for each sample
+
+Do PCA on full gene set
+
+Use porch for q-value calc (if the method is applicable)
 
 
 
@@ -168,3 +180,26 @@ Use MACS2 and STRING binidng score for limiting TF target gene sets
 * Worked on transferreing desirable features of Overleaf thesis template to the KTH template
 * Transferred what had previously been written in Overleaf template to KTH template
 * Worked on code for creating stricter TF target gene sets (by setting a MACS2 score threshold, that is based on q-value from ChIP-seq peak calling)
+
+### 19/2 2020
+* Started writing on background for thesis (about principal component analysis)
+* Looked further into creating smaller TF target gene sets (tested higher MACS2 score thresholds)
+
+### 20/2 2020
+* Continued writing on background for thesis (PCA)
+* Tested higher MACS2 score thresholds (700, 800) for TF target gene set determination
+
+### 21/2 2020
+* Wrote code for plotting gene set size vs ratio of variance explained to see correlation and ran said code for datasets from different MACS2 score thresholds
+* Started looking into plotting a heatmap comparing a change over  time of a TF's PC and each individual gene in its gene set
+
+
+### 24/2 2020
+* Continued writing on thesis (background - ANOVA)
+
+### 25/2 2020
+* Continued writing on thesis (background - ANOVA)
+* Tried running PCA on full dataset (all genes) to see how much of the variance the first PC would explain
+* Tested TF gene set generation with very high MACS2 score threshold.
+* Improved code for fetching TF gene sets to be able to handle temporary loss of internet connection
+
