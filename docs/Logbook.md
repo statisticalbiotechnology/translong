@@ -16,9 +16,9 @@
 * How does the sklean PCA function deal with replicates? How should I actually deal with replicates? No problem if trend is the same, but information is lost if they are different and we simply classify them as separate datapoints.
 
 ### Ideas/plans/thoughts
-* Plot PC1 vs PC2 to see if different organs cluster along PC1 axis
+* ~~Plot PC1 vs PC2 to see if different organs cluster along PC1 axis~~
 
-* Perform PCA on organs individually
+* ~~Perform PCA on organs individually~~
 
 * Try to perform the analysis with porch
 
@@ -30,7 +30,7 @@
 
 * Look into which genes explain most of the variation for interesting TFs, how much of the first principal component they make up
 
-* Test including a second principal component.
+* Test including a second principal component
 
 * Look into issues with the method, how principal components depend on linear relationships
 
@@ -229,4 +229,6 @@
 * Wrote code for performing PCA on organs separately
 
 ### 3/3 2020
-* 
+* Fixed so code can give results for more than the first PC even in the cases when a TF has fewer genes than the requested number of PCs (Do PCA for fewer PCs and fill emptry results with NaN)
+* Wrote code to plot results from PC1 against results from PC2, colouring points based on developmental stage and with shapes dependent on organ.
+
