@@ -1,53 +1,58 @@
 ## Logbook
 ### Questions
-Recommended IDE (integrated development environment) for Python?
 
-~~Should data preparation for log2 transformation be done by removing rows with 0 activity or should a constant (1) be added to each value?~~
+* Regarding significance: is q-value not an option with the p-value distribution this data has?
 
-Regarding significance: is q-value not an option with the p-value distribution this data has?
+* Regarding significance: what alternative method do you suggest should be used? Bonferroni correction?
 
-Regarding significance: what alternative method do you suggest should be used? Bonferroni correction?
+* Regarding significance: should significant results be reported, or just aquired p-values? Worry of ad hoc since the full experiment has been run (without log2 transformation) prior to setting a threshold.
 
-Regarding significance: should significant results be reported, or just aquired p-values? Worry of ad hoc since the full experiment has been run (without log2 transformation) prior to setting a threshold.
+* Why is the standardization before PCA done on each individual gene set and not on the full gene set once? We want to center the data to look at the variation specifically among the selected genes, and don't want it to be affected by other genes.
 
-How would using porch instead of what I've already done affect the results? How does it operate differently?
+* If I am to plot the change in expression level of the single gene coding for a TF, should it be done with data that has been standardized similarly to the data used for PCA (but then for the full dataset once)? Important to note that 
+
+* Ideas for interpretation of the fact that PCA on the full dataset leads to the first PC explaining >35% of the variation? General increase in expression over time? General difference between organs? Sampling error? Difference between organs is likely what is moslty captured, since it is a clear separation. May be cause for the p-values for C(dev_stage) being high.
+
+* How does the sklean PCA function deal with replicates? How should I actually deal with replicates? No problem if trend is the same, but information is lost if they are different and we simply classify them as separate datapoints.
 
 ### Ideas/plans/thoughts
-Perform PCA on organs individually
+* Plot PC1 vs PC2 to see if different organs cluster along PC1 axis
 
-Try to perform the analysis with porch
+* Perform PCA on organs individually
 
-Try performing the analysis with weighted PCA
+* Try to perform the analysis with porch
 
-~~Save figures of activity of TFs found to be most significantly differentially expressed over time and across organs~~
+* Try performing the analysis with weighted PCA
 
-Look further into the TFs found to be most significantly differentially expressed over time and across organs, their relevance, function etc.
+* ~~Save figures of activity of TFs found to be most significantly differentially expressed over time and across organs~~
 
-Look into which genes explain most of the variation for interesting TFs, how much of the first principal component they make up
+* Look further into the TFs found to be most significantly differentially expressed over time and across organs, their relevance, function etc.
 
-Test including a second principal component.
+* Look into which genes explain most of the variation for interesting TFs, how much of the first principal component they make up
 
-Look into issues with the method, how principal components depend on linear relationships
+* Test including a second principal component.
 
-Consider the effect of TF regulation being both activating and repressing for when doing the PCA. Is this part of the power of PCA, that it is taken into consideration?
+* Look into issues with the method, how principal components depend on linear relationships
 
-~~Compare results for TF activity aqcuired with PCA and the measured level of mRNA for the gene~~
+* Consider the effect of TF regulation being both activating and repressing for when doing the PCA. Is this part of the power of PCA, that it is taken into consideration?
 
-Try to reduce the size of the TF target gene sets
+* ~~Compare results for TF activity aqcuired with PCA and the measured level of mRNA for the gene~~
 
-~~Use MACS2 and STRING binidng score for limiting TF target gene sets~~
+* ~~Try to reduce the size of the TF target gene sets~~
 
-Remove TFs with more than eg 500 genes
+* ~~Use MACS2 and STRING binidng score for limiting TF target gene sets~~
 
-~~Plot number of genes in TF gene set against variance expained by the first principal component~~
+* ~~Remove TFs with more than eg 500 genes~~
 
-Make sunburst plots?
+* ~~Plot number of genes in TF gene set against variance expained by the first principal component~~
 
-In case much time is available: make a figure where each gene's activity for a TF is shown as colour coded squares for each sample, and compare to the overall actvity change for TF for each sample
+* Make sunburst plots?
 
-Do PCA on full gene set
+* In case much time is available: make a figure where each gene's activity for a TF is shown as colour coded squares for each sample, and compare to the overall actvity change for TF for each sample
 
-Use porch for q-value calc (if the method is applicable)
+* ~~Do PCA on full gene set~~
+
+* Use porch for q-value calc (if the method is applicable)
 
 
 
@@ -193,7 +198,6 @@ Use porch for q-value calc (if the method is applicable)
 * Wrote code for plotting gene set size vs ratio of variance explained to see correlation and ran said code for datasets from different MACS2 score thresholds
 * Started looking into plotting a heatmap comparing a change over  time of a TF's PC and each individual gene in its gene set
 
-
 ### 24/2 2020
 * Continued writing on thesis (background - ANOVA)
 
@@ -203,3 +207,26 @@ Use porch for q-value calc (if the method is applicable)
 * Tested TF gene set generation with very high MACS2 score threshold.
 * Improved code for fetching TF gene sets to be able to handle temporary loss of internet connection
 
+### 26/2 2020
+* Continued writing on thesis (background - ANOVA, materials and methods)
+* Compared gene sets from different MACS2 score thesholds and ran a full experiment with a MACS2 threshold of 700 and a max TF gene set size of 500 genes (TFs with more genes were removed).
+
+### 27/2 2020
+* Continued writing on thesis (materials and methods)
+* Made improvements to figures
+* Optimized code a bit
+* Looked into using porch for performing PCA
+
+### 28/2 2020
+* Wasted time
+* Made efforts to run PCA with porch, but encountered many problems (structure of dataframes, handling of zero values in expression_df, getting the ratio of variance explained)
+* Attempted to improve/change produced figures of TF 'activity' over time
+* Reflected on issues with the project
+
+### 2/3 2020
+* Discussed my questions with Gus (handling of replicates is a question worth considering, but will not be handled differently in this project)
+* Adapted code to be able to give results for more than the first PC (must still fix the cases when a TF has fewer genes than the requested number of PCs)
+* Wrote code for performing PCA on organs separately
+
+### 3/3 2020
+* 
