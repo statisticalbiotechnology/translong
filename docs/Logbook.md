@@ -20,21 +20,7 @@
 
 * ~~Perform PCA on organs individually~~
 
-* Try to perform the analysis with porch
-
-* Try performing the analysis with weighted PCA
-
 * ~~Save figures of activity of TFs found to be most significantly differentially expressed over time and across organs~~
-
-* Look further into the TFs found to be most significantly differentially expressed over time and across organs, their relevance, function etc.
-
-* Look into which genes explain most of the variation for interesting TFs, how much of the first principal component they make up
-
-* Test including a second principal component
-
-* Look into issues with the method, how principal components depend on linear relationships
-
-* Consider the effect of TF regulation being both activating and repressing for when doing the PCA. Is this part of the power of PCA, that it is taken into consideration?
 
 * ~~Compare results for TF activity aqcuired with PCA and the measured level of mRNA for the gene~~
 
@@ -46,15 +32,36 @@
 
 * ~~Plot number of genes in TF gene set against variance expained by the first principal component~~
 
-* Make sunburst plots?
+* ~~Do PCA on full gene set~~
+
 
 * In case much time is available: make a figure where each gene's activity for a TF is shown as colour coded squares for each sample, and compare to the overall actvity change for TF for each sample
 
-* ~~Do PCA on full gene set~~
+* Look for significant TFs defined by their 2nd principal component
+
+* Look for singificant TFs defined by their 1st and 2nd principal components
 
 * Use porch for q-value calc (if the method is applicable)
 
+* Look further into the TFs found to be most significantly differentially expressed over time and across organs, their relevance, function etc.
 
+* Look into which genes explain most of the variation for interesting TFs, how much of the first principal component they make up
+
+* Look into issues with the method, how principal components depend on linear relationships
+
+* Consider the effect of TF regulation being both activating and repressing for when doing the PCA. Is this part of the power of PCA, that it is taken into consideration?
+
+* Try performing the analysis with weighted PCA
+
+* Try to perform the analysis with porch
+
+* Make sunburst plots?
+
+* Filter TF gene sets by only picking the n genes with the highest MACS2 score for any sample, with no hard MACS2 cutoff. n=500 may give too many genes, making it difficult to find which are important?
+
+* Skip doing an ANOVA. Instead look at activity variation over time for predetermined, well studied TFs that are known to have varying activity and try to validate the method by seeing if the patterns are similar.
+
+* TF gene expression could potentially be used as an indication of correct results for validation.
 
 ### 16/1 2020
 * Read *A Quick Guide to Organizing Computational Biology Projects* (William Stafford Noble, 2009)
@@ -231,4 +238,22 @@
 ### 3/3 2020
 * Fixed so code can give results for more than the first PC even in the cases when a TF has fewer genes than the requested number of PCs (Do PCA for fewer PCs and fill emptry results with NaN)
 * Wrote code to plot results from PC1 against results from PC2, colouring points based on developmental stage and with shapes dependent on organ.
+
+### 4/3 2020
+* Reflected on what I've done in the project so far
+* Thought about how to continue with the project
+* Improved the plot of PC1 vs PC2 by separating datapoints from different organs by colour, which is gradiated to show at which timepoint they were sampled
+
+### 5/3 2020
+* Forgot to write in logbook
+
+### 6/3 2020
+* Reflected on how to continue the project, what can be reported as results, what should be done for validation...
+* Discussed how to continue the project with Patrik and Gus.
+
+### 9/3 2020
+* Created figure with 4 subplots showing PC1 vs PC2 with two different coloring schemes for filtered (so no TFs with more than 500 genes) or unfiltered TF gene sets, to be presented for the weekly meeting.
+* Discussed about how to continue the project. Came up with new workflow for testing how well the method works: First test for obvious case TFs (high and varying expression), check if "activity" pattern resembles expression, test with non-obvious TFs (always present but require activation), check literature if results seem accurate/probable.
+* Wrote code for finding TFs whose gene expression is high and with high variance to be selected for continued analysis.
+* Fixed bugs for function for finding gene sets of the N genes with highest MACS2 score
 
