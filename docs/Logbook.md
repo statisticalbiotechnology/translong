@@ -63,6 +63,15 @@
 
 * TF gene expression could potentially be used as an indication of correct results for validation.
 
+* Look at the TFs that has a high percentage of the variation explained by the first PC. Are the genes contributing the most to PC1 for these genes that have previously been reported as affected by the TF.
+
+* Look into the need of further preprocessing. Is there overall variation that is captured, obscuring the changes for specific TFs.
+
+* For when the activity looks the same for all TFs, look into the genes with the highest contributions and remove them, then try again. Remove genes with high contribution across all TFs.
+
+### TO DO
+* Make function for plotting expression and PC1 for selected TFs with high and varied gene expression
+
 ### 16/1 2020
 * Read *A Quick Guide to Organizing Computational Biology Projects* (William Stafford Noble, 2009)
 * Followed the guide *Version Control with Git* provided by Lukas
@@ -256,4 +265,27 @@
 * Discussed about how to continue the project. Came up with new workflow for testing how well the method works: First test for obvious case TFs (high and varying expression), check if "activity" pattern resembles expression, test with non-obvious TFs (always present but require activation), check literature if results seem accurate/probable.
 * Wrote code for finding TFs whose gene expression is high and with high variance to be selected for continued analysis.
 * Fixed bugs for function for finding gene sets of the N genes with highest MACS2 score
+
+### 10/3 2020
+* Fixed bugs in code for finding TFs whose gene expression is high and with high variance to be selected for continued analysis.
+* Created function for using above data to perfomr PCA and plot the results.
+* Combined two functions into one that creates a figure with two plots showing PC activity and gene expression over time, and made it work with data from a single organ.
+* Created function that creates a dictionary with all desired ChIP-atlas data. 
+* Created function for selecting TF gene sets based on both MACS2 threshold and top x genes that uses the above mentioned dictionary instead of fetching it through http every run.
+* Improved data analysis function
+
+### 11/3 2020
+* Created new datasets with TF definitions based on both a minimum MACS2 threshold and a top n genes threshold
+* Started writng on project plan version 2
+
+### 12/3 2020
+* Worked on project plan version 2
+
+### 13/3 2020
+* Finished project plan version 2
+* Brainstormed
+
+### 16/3 2020
+* Prepared for half-time meeting
+
 
