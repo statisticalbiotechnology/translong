@@ -336,12 +336,10 @@ def dataprep(organ=None, remove=None,filtering=False):
     expdata = expdata/(expdata.sum()/10**6) #Reads/transcripts per million normalization
 
     if filtering==True:
-        print('Removing genes with expression in <25% of samples...')
         lim = expdata.shape[1]*0.25
         for gene in expdata.index: #Remove genes for which >25% of samples had no expression
             if expdata.loc[gene,:].tolist().count(0) > lim:
                 expdata.drop(gene, inplace=True)
-        print('Done')
         expdata = expdata + 1 #Prepare 0-values for log transformation
     else:
         expdata.replace(0,float('NaN'), inplace=True) #Remove 0-values for log transformation
@@ -366,7 +364,7 @@ def save_fig(figure, name):
     '''
     if os.path.isdir('../exp/'+str(date.today())) == False:
         os.mkdir('../exp/'+str(date.today()))
-    figure.savefig('../exp/'+str(date.today())+'/'+name.png', bbox_inches="tight")
+    figure.savefig('../exp/'+str(date.today())+'/'+name+'.png', bbox_inches="tight")
 
 def heatmap(PCAdata, expdata, TF_gene_sets):
     '''
@@ -569,24 +567,24 @@ def contplot():
     plt.title(TF)
     return plt
 
-def activityplot(TF_list, PCA_results, logdata, organ='', hue=None, style=None):
+def activityplot(TF, PCA_results, logdata, organ='', hue=None, style=None):
     '''
     Function for plotting TF principal component and gene expression over time
     '''
-    PCA_results = -PCA_results
-    for TF in TF_list.dropna().index:
-        fig, axes = plt.subplots(1,2, figsize=(32,16)) #, gridspec_kw={'height_ratios': [1,x]})
-        #Plot the combined PC expression for TFs in list
-        PC_plot = sns.lineplot(x='dev_stage', y=TF, hue=hue, style=style, data=PCA_results.reset_index(), ax=axes[0])
-        axes[0].set_xlabel('Developmental stage (days)')
-        axes[0].set_ylabel('Log2 expression')
-        axes[0].set_title(TF+' PC expression'+organ)
-        #Plot the gene expression for the TFs in list
-        Gene_plot = sns.lineplot(x='dev_stage', y=TF, hue=hue, style=style, data=logdata.T.sort_index().reset_index(), ax=axes[1])
-        axes[1].set_xlabel('Developmental stage (days)')
-        axes[1].set_ylabel('Log2 expression')
-        axes[1].set_title(TF+' gene expression'+organ)
-        save_fig(plt,TF,organ)
+    #PCA_results = -PCA_results
+
+    fig, axes = plt.subplots(1,2, figsize=(32,16)) #, gridspec_kw={'height_ratios': [1,x]})
+    fig.suptitle(TF + organ, fontsize=30, weight='bold')
+    #Plot the combined PC expression for TFs in list
+    PC_plot = sns.lineplot(x='dev_stage', y=TF, hue=hue, style=style, data=PCA_results.reset_index(), ax=axes[0])
+    axes[0].set_xlabel('Days after birth',fontsize=25)
+    axes[0].set_ylabel('Predicted activity',fontsize=25)
+    axes[0].set_title('PC', fontsize=25)
+    #Plot the gene expression for the TFs in list
+    Gene_plot = sns.lineplot(x='dev_stage', y=TF, hue=hue, style=style, data=logdata.T.sort_index().reset_index(), ax=axes[1])
+    axes[1].set_xlabel('Days after birth',fontsize=25)
+    axes[1].set_ylabel('Log2 expression',fontsize=25)
+    axes[1].set_title('Gene', fontsize=25)
     return plt
 
 def Sample_behaviour_plot(u, s, vh):
@@ -659,7 +657,6 @@ def weighted_PCA(df, n_pc=1, standardize=True):
 
     weights = 0 + np.isfinite(x)
     kwds = {'weights': weights}
-    display(weights.shape)
     n_pcs = min(df.shape[0],n_pc)
     pca = WPCA(n_components = n_pcs).fit(x2,**kwds) #Fit data to model
     expl = pca.explained_variance_ratio_
@@ -733,9 +730,9 @@ def TF_selection(logdata, TF_gene_sets, which='',n=5):
         genes = logdata.nlargest(n=n, columns='Variance').index.tolist()
     return genes
 
-def main_0(kbp,MACS2, MAX, n_pc=1, PC=1, organ=None, which='', remove=None, filtering=False):
+def main(kbp,MACS2, MAX, n_pc=1, PC=1, organ=None, which='', remove=None, filtering=False):
     '''
-    Main function for running the new primary experiment, removing genes without expression any sample
+    Main function for running the primary experiment
     '''
     TF_gene_sets = gene_sets(kbp,MACS2,MAX)
 
@@ -746,63 +743,37 @@ def main_0(kbp,MACS2, MAX, n_pc=1, PC=1, organ=None, which='', remove=None, filt
     #TFs = ['Nanog','Arid3a','Aff4','Pou5f1']
     TFs = ['Klf9','Sox11']
 
-    Other_results = pd.DataFrame(index=TF_gene_sets.loc[TFs,:].index)
-    [PCA_results, Other_results, Contributions] = run_PCA(logdata,TF_gene_sets.loc[TFs,:],Other_results, n_pc,PCA_func=normal_PCA)
-
-    if organ == None:
-        plot = activityplot(Other_results,PCA_results['PC{0}'.format(PC)],logdata,hue='organ',style='organ')
-        plot.show()
+    if filtering:
+        PCA_func=weighted_PCA
     else:
-        plot = activityplot(Other_results,PCA_results['PC{0}'.format(PC)],logdata,organ=' '+organ)
-        plot.show()
-    for a in Contributions:
-        print('Gene contributions for TF {0}:'.format(a))
-        display(Contributions[a])
-        print('Variance explained by PC{1} for TF {0}: '.format(a,PC))
-        display(Other_results.loc[a,'Variance explained PC{0}'.format(PC)])
-    return PCA_results, Other_results, Contributions
-
-def main_25(kbp, MACS2, MAX, n_pc=1, PC=1, organ=None, which='',remove=None,filtering=True):
-    '''
-    Main function for running the new primary experiment, removing genes with expression in <25% of samples
-    '''
-    TF_gene_sets = gene_sets(kbp,MACS2,MAX)
-
-    logdata = dataprep(organ=organ, remove=remove, filtering=filtering)
-    TFs = TF_selection(logdata,TF_gene_sets, which=which,n=5)
-    #TFs = ['Nanog','Atf4','Epcam','Actb']
-    #TFs = ['Nanog','Arid3a','Pou5f1','Aff4']
+        PCA_func=normal_PCA
 
     Other_results = pd.DataFrame(index=TF_gene_sets.loc[TFs,:].index)
-    [PCA_results, Other_results, Contributions] = run_PCA(logdata,TF_gene_sets.loc[TFs,:],Other_results, n_pc,PCA_func=weighted_PCA)
-    #genelist = ['Txndc11','Ireb2','Cacybp']
-    if organ == None:
-    #    for gene in genelist:
-    #        sns.lineplot(x='dev_stage', y=gene,hue='organ', data=logdata.T.sort_index().reset_index())
-    #        plt.show()
+    [PCA_results, Other_results, Contributions] = run_PCA(logdata,TF_gene_sets.loc[TFs,:],Other_results,n_pc,PCA_func=PCA_func)
 
-        activityplot(Other_results,PCA_results['PC{0}'.format(PC)],logdata,hue='organ',style='organ')
-    else:
-    #    for gene in genelist:
-    #        sns.lineplot(x='dev_stage', y=gene, data=logdata.T.sort_index().reset_index())
-    #        plt.show()
+    for TF in Other_results.dropna().index:
+        if organ == None:
+            plot = activityplot(TF,PCA_results['PC{0}'.format(PC)],logdata,hue='organ',style='organ')
+        else:
+            plot = activityplot(TF,PCA_results['PC{0}'.format(PC)],logdata,organ=' '+organ)
+        save_fig(plot,'Activity_'+TF+'_'+str(organ)+'_'+str(remove)+'PCsremoved_25%filtering_'+str(filtering))
+        plot.show()
 
-        activityplot(Other_results,PCA_results['PC{0}'.format(PC)],logdata,organ=' '+organ)
-    for a in Contributions:
-        print('Gene contributions for TF {0}:'.format(a))
-        display(Contributions[a])
-        print('Variance explained by PC{1} for TF {0}: '.format(a,PC))
-        display(Other_results.loc[a,'Variance explained PC{0}'.format(PC)])
     return PCA_results, Other_results, Contributions
 
-def testall(n_pc=1, PC=1, organ=None,PCA_func=normal_PCA,remove=None,filtering=False):
+def testall(n_pc=1, PC=1, organ=None,remove=None,filtering=False):
     '''
-    Function for performing PCA on the full gene set and plot the results
+    Main function for performing PCA on the full gene set and plot the results
     '''
     logdata = dataprep(organ=organ,remove=remove,filtering=filtering)
 
     TF_gene_set = pd.DataFrame(data={'Antigen':['All'], 'Genes':[logdata.index.values]})
     TF_gene_set.set_index('Antigen',inplace=True)
+
+    if filtering:
+        PCA_func=weighted_PCA
+    else:
+        PCA_func=normal_PCA
 
     Other_results = pd.DataFrame(index=['All'])
     [PCA_results, Other_results, Contributions] = run_PCA(logdata,TF_gene_set,Other_results, n_pc, PCA_func=PCA_func)
@@ -813,27 +784,39 @@ def testall(n_pc=1, PC=1, organ=None,PCA_func=normal_PCA,remove=None,filtering=F
         sns.lineplot(x='dev_stage', y='All', data=PCA_results['PC{0}'.format(PC)].reset_index())
     return PCA_results, Other_results, Contributions
 
-def datacheck(kbp, MACS2, MAX, n_pc=2,organ=None, filtering=False, remove=None):
+def datacheck(kbp, MACS2, MAX, n_pc=2,organ=None, filtering=False, remove=None, sets=False, varexp=[], genebehave=False):
     '''
-    Main function for checking data distribution
+    Main function for checking data distribution, performing PCA for all TF gene sets
+    sets    :   boolean
+    Gives histogram of number of genes in gene sets
+    varexp  :   list
+    Dot plot of distriution of amount of variance explained by selected PCs
     '''
     TF_gene_sets = gene_sets(kbp, MACS2, MAX)
     logdata = dataprep(organ=organ,remove=remove, filtering=filtering)
 
+    if filtering:
+        PCA_func=weighted_PCA
+    else:
+        PCA_func=normal_PCA
+
     Other_results = pd.DataFrame(index=TF_gene_sets.index)
     [PCA_results, Other_results, Contributions] = run_PCA(logdata,TF_gene_sets,Other_results, n_pc,PCA_func=normal_PCA)
 
-    genesethist(Other_results, xlim=MAX)
-    plot1 = varexplplot(Other_results, xlim=MAX)
-    save_fig(plot1, 'VarExpl_'+str(kbp)+'_'+str(MACS2)+'_'+str(MAX)+'_'+str(organ)+'_'+str(filtering))
-    varexplplot(Other_results, xlim=MAX, PC=2)
+    if sets:
+        genesethist(Other_results, xlim=MAX)
 
-    if organ == None:
-        fig, axes = plt.subplots(1,2, figsize=(32,16))
-        PCplot(PCA_results, ax=axes[0])
-        PCplot2(PCA_results, ax=axes[1])
-    else:
-        PCplot3(PCA_results)
+    for i in varexp:
+        plot = varexplplot(Other_results, xlim=MAX, PC=i)
+        save_fig(plot, 'VarExpl_PC'+str(i)+'_'+str(kbp)+'_'+str(MACS2)+'_'+str(MAX)+'_'+str(organ)+'_'+str(filtering))
+
+    if genebehave:
+        if organ == None:
+            fig, axes = plt.subplots(1,2, figsize=(32,16))
+            PCplot(PCA_results, ax=axes[0])
+            PCplot2(PCA_results, ax=axes[1])
+        else:
+            PCplot3(PCA_results)
 
     return TF_gene_sets, Contributions
 
