@@ -818,7 +818,7 @@ def datacheck(kbp, MACS2, MAX, n_pc=2,organ=None, filtering=False, remove=None, 
         else:
             PCplot3(PCA_results)
 
-    return TF_gene_sets, Contributions
+    return TF_gene_sets, Other_results, Contributions
 
 def SVD(organ=None, remove=None, filtering=False):
     logdata = dataprep(organ=organ, remove=remove, filteing=filtering)
