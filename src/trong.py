@@ -5,6 +5,7 @@ import numpy as np
 from sklearn.decomposition import PCA
 from wpca import WPCA
 from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import mean_squared_error
 import re
 import os
 from datetime import date
@@ -548,6 +549,9 @@ def PCcheck(kbp, MACS2, genelim, organ=None):
     plt.show()
 
 def checkdatacheck():
+    '''
+    Does not work,
+    '''
     data = pd.DataFrame()
     for i in range(300,1200,100):
         TF_gene_sets = gene_sets(10,i)
@@ -573,12 +577,12 @@ def activityplot(TF, PCA_results, logdata, organ='', hue=None, style=None):
     '''
     #PCA_results = -PCA_results
 
-    fig, axes = plt.subplots(1,2, figsize=(32,16)) #, gridspec_kw={'height_ratios': [1,x]})
+    fig, axes = plt.subplots(1,2, figsize=(32,16))
     fig.suptitle(TF + organ, fontsize=30, weight='bold')
     #Plot the combined PC expression for TFs in list
     PC_plot = sns.lineplot(x='dev_stage', y=TF, hue=hue, style=style, data=PCA_results.reset_index(), ax=axes[0])
     axes[0].set_xlabel('Days after birth',fontsize=25)
-    axes[0].set_ylabel('Predicted activity',fontsize=25)
+    axes[0].set_ylabel('Estimated activity',fontsize=25)
     axes[0].set_title('PC', fontsize=25)
     #Plot the gene expression for the TFs in list
     Gene_plot = sns.lineplot(x='dev_stage', y=TF, hue=hue, style=style, data=logdata.T.sort_index().reset_index(), ax=axes[1])
@@ -587,14 +591,13 @@ def activityplot(TF, PCA_results, logdata, organ='', hue=None, style=None):
     axes[1].set_title('Gene', fontsize=25)
     return plt
 
-def Sample_behaviour_plot(u, s, vh):
-    sep = 'time'
+def Sample_behaviour_plot(data, u, s, vh, sep='time'):
     df = pd.DataFrame(vh[0:2,:].T, columns=['Eigengene 1','Eigengene 2'])
-    df.loc[:,'organ'] = logdata.columns.get_level_values(0)
-    df.loc[:,'time'] = logdata.columns.get_level_values(1)
+    df.loc[:,'organ'] = data.columns.get_level_values(0)
+    df.loc[:,'time'] = data.columns.get_level_values(1)
     sns.set_style('white')
     plot = sns.lmplot(x='Eigengene 1', y='Eigengene 2', data=df, hue=sep, fit_reg=False)
-    return plt
+    return plot
 
 ### PCA functions and main functions for performing experiments ###
 
@@ -610,14 +613,11 @@ def normal_PCA(df, n_pc=1, standardize=True):
 #        x2 = x/x.std()
         standardizer = StandardScaler()
         x2 = standardizer.fit_transform(x) #Standardize the data (center to mean and scale to unit variance)
-
-#        x2 = preprocessing.scale(x) #Standardize the data (center to mean and scale to unit variance)
+#       x2 = preprocessing.scale(x) #Standardize the data (center to mean and scale to unit variance)
     else:
         x2 = x
 
     x2 = np.nan_to_num(x2) #Change back NaN values to 0, so array is accepted by the PCA function
-
-
     n_pcs = min(df.shape[0],n_pc)
     pca = PCA(n_components = n_pcs).fit(x2) #Set PCA parameters
     expl = pca.explained_variance_ratio_
@@ -681,6 +681,7 @@ def run_PCA(data, TF_gene_sets, Other_results, n_pc=1, PCA_func=weighted_PCA):
     '''
     PCA_per_TF = {}
     Contributions = {}
+    standardizer = StandardScaler()
     for i in range (n_pc):
         PCA_per_TF['PC{0}'.format(i+1)] = pd.DataFrame(index=data.columns)
     for TF in TF_gene_sets.index:
@@ -691,11 +692,15 @@ def run_PCA(data, TF_gene_sets, Other_results, n_pc=1, PCA_func=weighted_PCA):
             TFdata = data.loc[genes,:]
             [res, expl, cont] = PCA_func(TFdata, n_pc)
             Contributions[TF] = cont
+            TF_stand = standardizer.fit_transform(data.loc[[TF],:].T)
             for i in range(n_pc):
                 PCA_per_TF['PC{0}'.format(i+1)][TF] = res.iloc[:,i]
                 PCA_per_TF[TF] = res.iloc[:,0]
                 Other_results.loc[TF,'Gene count'] = len(genes)
                 Other_results.loc[TF,'Variance explained PC'+str(i+1)] = expl[i]
+                PC_stand = standardizer.fit_transform(PCA_per_TF['PC'+str(i+1)].loc[:,[TF]])
+                PC_stand_neg = standardizer.fit_transform(-PCA_per_TF['PC'+str(i+1)].loc[:,[TF]])
+                Other_results.loc[TF,'MSE PC'+str(i+1)] = min(mean_squared_error(TF_stand,PC_stand),mean_squared_error(TF_stand,PC_stand_neg))
         else:
             print(TF+' has less than 3 genes associated with it and is therefore disregarded.')
             Other_results.drop(TF)
@@ -738,10 +743,10 @@ def main(kbp,MACS2, MAX, n_pc=1, PC=1, organ=None, which='', remove=None, filter
 
     logdata = dataprep(organ=organ, remove=remove, filtering=filtering)
 
-    #TFs = TF_selection(logdata,TF_gene_sets, which=which,n=5)
-    #TFs = ['Nanog','Atf4','Actb']
-    #TFs = ['Nanog','Arid3a','Aff4','Pou5f1']
-    TFs = ['Klf9','Sox11']
+    if which in ('Random','Top',''):
+        TFs = TF_selection(logdata,TF_gene_sets, which=which,n=20)
+    else:
+        TFs = which
 
     if filtering:
         PCA_func=weighted_PCA
@@ -756,7 +761,7 @@ def main(kbp,MACS2, MAX, n_pc=1, PC=1, organ=None, which='', remove=None, filter
             plot = activityplot(TF,PCA_results['PC{0}'.format(PC)],logdata,hue='organ',style='organ')
         else:
             plot = activityplot(TF,PCA_results['PC{0}'.format(PC)],logdata,organ=' '+organ)
-        save_fig(plot,'Activity_'+TF+'_'+str(organ)+'_'+str(remove)+'PCsremoved_25%filtering_'+str(filtering))
+        save_fig(plot,'Activity_'+TF+'_'+str(organ)+'_'+str(remove)+'PCremoved_filtering_'+str(filtering))
         plot.show()
 
     return PCA_results, Other_results, Contributions
@@ -775,14 +780,21 @@ def testall(n_pc=1, PC=1, organ=None,remove=None,filtering=False):
     else:
         PCA_func=normal_PCA
 
-    Other_results = pd.DataFrame(index=['All'])
-    [PCA_results, Other_results, Contributions] = run_PCA(logdata,TF_gene_set,Other_results, n_pc, PCA_func=PCA_func)
+    PCA_results, explained_var, contributions = normal_PCA(logdata)
+    PCA_results.columns = ['All']
+    fig, axes = plt.subplots(figsize=(16,16))
+
 
     if organ == None:
-        sns.lineplot(x='dev_stage', y='All', hue='organ', style='organ', data=PCA_results['PC{0}'.format(PC)].reset_index())
+        plot=sns.lineplot(x='dev_stage', y='All', hue='organ', style='organ', data=PCA_results.reset_index())
     else:
-        sns.lineplot(x='dev_stage', y='All', data=PCA_results['PC{0}'.format(PC)].reset_index())
-    return PCA_results, Other_results, Contributions
+        plot=sns.lineplot(x='dev_stage', y='All', data=PCA_results.reset_index())
+    axes.set_xlabel('Days after birth',fontsize=25)
+    axes.set_ylabel('PC1 value',fontsize=25)
+    fig.suptitle(organ, fontsize=30, weight='bold')
+
+    save_fig(fig,'Fulldata_'+str(organ)+'_'+str(remove)+'PCremoved_filtering_'+str(filtering))
+    return PCA_results, explained_var, contributions
 
 def datacheck(kbp, MACS2, MAX, n_pc=2,organ=None, filtering=False, remove=None, sets=False, varexp=[], genebehave=False):
     '''
@@ -820,19 +832,20 @@ def datacheck(kbp, MACS2, MAX, n_pc=2,organ=None, filtering=False, remove=None, 
 
     return TF_gene_sets, Other_results, Contributions
 
-def SVD(organ=None, remove=None, filtering=False):
-    logdata = dataprep(organ=organ, remove=remove, filteing=filtering)
+def SVD(in_data, organ=None, remove=None, filtering=False):
+    in_data = dataprep(organ=organ, remove=remove, filtering=filtering)
     standardizer = StandardScaler()
-    data = standardizer.fit_transform(logdata.values.T)
+    data = standardizer.fit_transform(in_data.values.T)
     u, s, vh = np.linalg.svd(data.T)
     #uu, ss, vvh = np.linalg.svd(expdata-1)
     return u, s, vh
 
-def Sample_behaviour(organ=None, remove=None, filtering=False):
-    [u,s,vh] = SVD(organ=organ,remove=remove,filtering=filtering)
-    plot = Sample_behaviour_plot(u,s,vh)
+def Sample_behaviour(organ=None, remove=None, filtering=False, sep='time'):
+    data = dataprep(organ=organ, remove=remove, filtering=filtering)
+    [u,s,vh] = SVD(data, organ=organ,remove=remove,filtering=filtering)
+    plot = Sample_behaviour_plot(data,u,s,vh,sep)
     plot.show()
-    save_fig(plot,'Sample_behaviour_'+str(organ)+'_'+str(remove)+'_'+str(filtering))
+    save_fig(plot,'Sample_behaviour_'+str(organ)+'_'+str(remove)+'_'+str(filtering)+'_'+sep)
 
 ### Stray functions ###
 
