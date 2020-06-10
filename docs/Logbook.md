@@ -65,12 +65,18 @@
 
 * Look at the TFs that has a high percentage of the variation explained by the first PC. Are the genes contributing the most to PC1 for these genes that have previously been reported as affected by the TF.
 
-* Look into the need of further preprocessing. Is there overall variation that is captured, obscuring the changes for specific TFs.
-
 * For when the activity looks the same for all TFs, look into the genes with the highest contributions and remove them, then try again. Remove genes with high contribution across all TFs.
 
+* 
+
 ### TO DO
-* Make function for plotting expression and PC1 for selected TFs with high and varied gene expression
+* Write on the report, let it be shit, but for science's sake write something
+
+* Plot sample behaviour by plotting eigen samples/genes from PC1 vs PC2 to see if there is a bias and it is a good idea to remove PC1 from the full data
+
+* Send an email to Lukas and Gus asking about the data's distrubution. The log transformed data is not quite normally distributed. Does the data truly follow a log normal distribution or is it more correct that it follows a quasi-Poissan or negative binomial distribution instead, and how do these differ?
+
+* Fix issue occuring when inputting TFs with fewer than 3 genes
 
 ### 16/1 2020
 * Read *A Quick Guide to Organizing Computational Biology Projects* (William Stafford Noble, 2009)
@@ -288,4 +294,23 @@
 ### 16/3 2020
 * Prepared for half-time meeting
 
+### 17/3 2020
+* Plotted results from PCA of the full dataset to compare with PCs of TF gene sets
+* Tested plotting PC2 for various gene sets to see which procuded the best results
+* Pondered on options to improve results
 
+### 18/3 2020
+* Worked on writing Materials & methods for thesis
+
+### 19/3 2020
+* Had a meeting about data preprocessing and weighted PCA
+* Added sample-wise reads per million normalization
+* Added filter to remove genes whose expression was 0 in >25% of samples
+* Changed PCA method to weighted PCA
+
+### 20/3 2020
+* Fixed so that 0-values are really turned into NaN before gene-wise standardization
+* Created weight array for the weighted PCA and made so it is used 
+
+### 23/3 2020
+* 
