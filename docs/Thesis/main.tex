@@ -1,0 +1,57 @@
+\documentclass[,hyphens]{kththesis}
+
+\usepackage[printonlyused]{acronym}
+\usepackage{csquotes} % Recommended by biblatex
+\usepackage[style=numeric,sorting=none,backend=biber,firstinits=true]{biblatex}
+\DeclareNameAlias{default}{family-given}
+\usepackage[labelfont=bf, font=small]{caption}
+\addbibresource{references.bib} % The file containing our references, in BibTeX format
+\usepackage{wrapfig}
+\usepackage[colorinlistoftodos]{todonotes}
+%\usepackage[hyphens]{url}
+
+\title{Transcription factor analysis of longitudinal mRNA expression data}
+\alttitle{Transkriptionsfaktorsanalys av longitudinell mRNA-uttrycksdata}
+\author{August Jangerstad}
+\email{augjan@kth.se}
+\supervisor{Lukas Käll}
+\examiner{Patrik Ståhl}
+\programme{Master in Biotechnology}
+\school{School of Engineering Science in Chemistry, Biotechnology and Health}
+\date{\today}
+
+% Uncomment the next line to include cover generated at https://intra.kth.se/kth-cover?l=en
+\kthcover{kth-cover.pdf}
+
+
+\begin{document}
+
+\include{sections/0-Precontent}
+
+\input{sections/0.1-Acronyms}
+
+\tableofcontents
+
+% Mainmatter is where the actual contents of the thesis goes
+\mainmatter
+
+\include{sections/1-Introduction}
+\include{sections/2-Background}
+\include{sections/3-MaterialsMethods}
+\include{sections/4-Results}
+\include{sections/5-Discussion}
+\include{sections/6-FuturePerspectives}
+\include{sections/7-Acknowledgements}
+
+% Print the bibliography (and make it appear in the table of contents)
+
+\printbibliography[heading=bibintoc]
+
+\appendix
+
+\include{sections/A-PlotsEtc}
+
+% Tailmatter inserts the back cover page (if enabled)
+\tailmatter
+
+\end{document}
